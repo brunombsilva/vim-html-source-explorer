@@ -67,12 +67,13 @@ function! g:FollowUrlUnderCursor(limiter)
             endif
             return 0
         endif
-        let mpos = match(line, '".\{-}"',mpos+1)
+        let mpos = match(line, regex, mpos+1)
     endwhile
     return 0
 endfunction
 
 command -nargs=1 -bar Wget call <SID>wget(<q-args>)
-command Follow silent echo g:FollowUrlUnderCursor('""') || g:FollowUrlUnderCursor("''") ||  g:FollowUrlUnderCursor('()')
+command Follow if g:FollowUrlUnderCursor('""') || g:FollowUrlUnderCursor("''") ||  g:FollowUrlUnderCursor('()') | echo '' | endif
 
-map <leader>fl :Follow<CR> 
+map <leader>fl :Follow<CR>
+

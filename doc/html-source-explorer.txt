@@ -47,7 +47,7 @@ The html-source-explorer plugin requires the following:
 	plugin/html-source-explorer.vim - main html-source-explorer plugin file
 	doc/html-source-explorer.txt    - documentation (help) file
 
-   Refer to the |add-plugin|and |'runtimepath'| Vim help pages for more
+   Refer to the |add-plugin| and |'runtimepath'| Vim help pages for more
    details about installing Vim plugins.
 2. Change to the $HOME/.vim/doc or $HOME/vimfiles/doc or $VIM/vimfiles/doc
    directory, start Vim and run the ":helptags ." command to process the
