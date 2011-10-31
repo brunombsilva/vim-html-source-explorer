@@ -2,10 +2,10 @@ let g:se_default_extension = 'html'
 let g:se_http_handler = 'wget' "or Nread
 
 function! s:SetFileType(Url)
-    let regexp = 'http://.*/.*\.[a-z0-9]\{1,4}$'
-    if match(a:Url,regexp)>-1
-        let splitted = split(a:Url, '\.')
-        let extension = splitted[-1]
+    let regexp = 'http://.*/.*\.\([a-z0-9]\{1,4}\)\(?.*\)\?$'
+    let l = matchlist(a:Url,regexp)
+    if len(l)>2 && strlen(l[1])>0
+        let extension = l[1]
     else
         let extension = g:se_default_extension
     endif
