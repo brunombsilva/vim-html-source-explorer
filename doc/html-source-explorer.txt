@@ -23,9 +23,12 @@ It allows you to follow links by opening them on a new buffer on vim (the same
 way you can follow links on Mozilla Firefox/Chrome view source).
 
 By using <leader>fl inside "", '' or (), if it is a link (absolute, or
-relative) the file will be open.
+relative) the file will be open. 
 
 It works both on http:// urls and local files.
+
+This plugin also includes a |:Wget| command which allows you to open a copy of
+a remote file for editing in vim
 
 ==============================================================================
 						*html-source-explorer-requirements*
@@ -62,8 +65,6 @@ doc/html-source-explorer.txt files from the $HOME/.vim or $HOME/vimfiles directo
 						*html-source-explorer-using*
 5. Usage~
 
-The html-source-explorer plugin can be used in several different ways.
-
 1. You can keep the html-source-explorer window open during the entire editing session. On
    opening the html-source-explorer window, the tags defined in all the files in the Vim
    buffer list will be displayed in the html-source-explorer window. As you edit files, the
@@ -78,23 +79,36 @@ The html-source-explorer plugin can be used in several different ways.
 
 The html-source-explorer plugin provides the following ex-mode commands:
 
-|:TlistAddFiles|	Add multiple files to the html-source-explorer.
-						*:TlistAddFiles*
-:TlistAddFiles {file(s)} [file(s) ...]
-		Add one or more specified files to the html-source-explorer. You can
-		specify multiple filenames using wildcards. To specify a
-		file name with space character, you should escape the space
-		character with a backslash.
-		Examples:
->
-		    :TlistAddFiles *.c *.cpp
-		    :TlistAddFiles file1.html file2.html
-<
-		If you specify a large number of files, then it will take some
-		time for the html-source-explorer plugin to process all of them. The
-		specified files will not be edited in a Vim window and will
-		not be added to the Vim buffer list.
+|:Wget|	Download a copy of a remote file (HTTP) and open it in a new buffer.
+|:Follow| Follow the link under the cursor and open it (or a copy when using
+HTTP) in a new buffer.
 
+						*:Wget*
+:Wget {file} 
+		Download a copy of a remote file (HTTP) using wget command (by default)
+		and opening it in a new buffer.
+
+		You can use Nread instead of wget by adding the following line
+		to your .vimrc file
+>
+		let g:se_http_handler = 'Nread' "default: wget
+<
+		Wget changes the |filetype| to the downloaded file extension
+		(if it has one). In case the URL doesn't have and extension
+		the default file  type bellow is used.
+>
+		let g:se_default_extension = 'html'
+<
+						*:Follow*
+:Follow 
+		Follows the file referenced under the cursor. A valid file name is an 
+		absolute URL starting with the http:// scheme, a relative url
+		(e.g.: ./file1.txt or ../file2.txt)
+		or a domain absolute url (e.g.: /file.txt)
+		The relative paths are resolved using the current buffer
+		location which can be local file, or an URL (when the current
+		buffer is the result of a |:Wget| or a previous |:Follow|
+		command
 
 ==============================================================================
 						*html-source-explorer-functions*
@@ -103,15 +117,14 @@ The html-source-explorer plugin provides the following ex-mode commands:
 The html-source-explorer plugin provides several global functions that can be used from
 other Vim plugins to interact with the html-source-explorer plugin. These functions are
 described below.
+function! g:FollowUrl(Url)
 
-|Tlist_Update_File_Tags()|		Update the tags for the specified file
+|FollowUrl|		Opens a copy of a remote file (HTTP) or a local file.
 
-					    *Tlist_Update_File_Tags()*
-Tlist_Update_File_Tags({filename}, {filetype})
-		Update the tags for the file {filename}. The second argument
-		specifies the Vim filetype for the file. If the html-source-explorer plugin
-		has not processed the file previously, then the exuberant
-		ctags tool is invoked to generate the tags for the file.
+					    *FollowUrl()*
+FollowUrl({url})
+		Same behaviour as |:Follow| but receives the desired file path
+		as a parameter.
 
 
 ==============================================================================
