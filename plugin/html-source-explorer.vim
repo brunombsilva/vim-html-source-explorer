@@ -23,12 +23,22 @@ function! g:FollowUrl(Url)
     let remote = 0
     if(match(a:Url,'http://.*')<0)
         if(exists('b:Url'))
-            let i = match(b:Url,'[^/]\{-}$')
-            if(i>0)
-                let url = strpart(b:Url,0,i).a:Url
+            if(a:Url[0] == '/')
+                let prefix = matchstr(b:Url,'http://.*/\?')
+                if(prefix[strlen(prefix)-1] == '/')
+                    let url = prefix.strpart(a:Url,1)
+                else
+                    let url = prefix.a:Url
+                endif
                 let remote = 1
             else
-                return
+                let i = match(b:Url,'[^/]\{-}$')
+                if(i>0)
+                    let url = strpart(b:Url,0,i).a:Url
+                    let remote = 1
+                else
+                    return
+                endif
             endif
         else       
             if(a:Url[0] != '/')
